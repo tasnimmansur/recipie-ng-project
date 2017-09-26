@@ -1,5 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
+import { HttpModule } from "@angular/http";
 
 import { AppComponent } from './app.component';
 import { HeaderComponent } from './header/header.component';
@@ -32,6 +34,9 @@ import { RecipieEditComponent } from './recipies/recipie-edit/recipie-edit.compo
   imports: [
     BrowserModule,
     AppRoutingModule,
+    FormsModule,
+    ReactiveFormsModule,
+    HttpModule,
   ],
   providers: [ShoppingListService],
   bootstrap: [AppComponent]
