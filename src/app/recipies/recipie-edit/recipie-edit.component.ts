@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import {ActivatedRoute, Params} from "@angular/router";
-import {FormArray, FormControl, FormGroup} from "@angular/forms";
+import {ActivatedRoute, Params, Router} from "@angular/router";
+import {FormArray, FormControl, FormGroup, Validators} from "@angular/forms";
 import {RecipieService} from "../recipie.service";
 
 @Component({
@@ -14,7 +14,8 @@ export class RecipieEditComponent implements OnInit {
   recipieForm: FormGroup;
 
   constructor(private route: ActivatedRoute,
-              private recipieService: RecipieService) { }
+              private recipieService: RecipieService,
+              private router: Router) { }
 
   ngOnInit() {
     this.route.params
@@ -28,7 +29,33 @@ export class RecipieEditComponent implements OnInit {
   }
 
   onSubmit(){
-    console.log(this.recipieForm);
+   if(this.editMode) {
+     this.recipieService.updateRecipie(this.id, this.recipieForm.value);
+   }
+   else {
+     this.recipieService.addRecipie(this.recipieForm.value);
+   }
+   this.onCancel();
+  }
+
+  onCancel() {
+    this.router.navigate(['../'], {relativeTo: this.route});
+  }
+
+  onAddIngredient(){
+    (<FormArray>this.recipieForm.get('ingredients')).push(
+      new FormGroup({
+        'name': new FormControl(null, Validators.required),
+        'amount': new FormControl(null, [
+          Validators.required,
+          Validators.pattern(/^[1-9]+[0-9]*$/)
+        ])
+      })
+    )
+  }
+
+  onDeleteIngredient(index: number){
+    (<FormArray>this.recipieForm.get('ingredients')).removeAt(index);
   }
 
   private initForm(){
@@ -48,8 +75,11 @@ export class RecipieEditComponent implements OnInit {
         for(let ingredient of recipie.ingredients){
           recipieIngredients.push(
             new FormGroup({
-              'name': new FormControl(ingredient.name),
-              'amount': new FormControl(ingredient.amount)
+              'name': new FormControl(ingredient.name, Validators.required),
+              'amount': new FormControl(ingredient.amount, [
+                Validators.required,
+                Validators.pattern(/^[1-9]+[0-9]*$/)
+              ])
             })
           );
         }
@@ -57,9 +87,9 @@ export class RecipieEditComponent implements OnInit {
     }
 
     this.recipieForm = new FormGroup({
-      'name': new FormControl(recipieName),
-      'imagePath': new FormControl(recipieImagePath),
-      'description': new FormControl(recipieDescription),
+      'name': new FormControl(recipieName, Validators.required),
+      'imagePath': new FormControl(recipieImagePath, Validators.required),
+      'description': new FormControl(recipieDescription, Validators.required),
       'ingredients': recipieIngredients
     });
   }

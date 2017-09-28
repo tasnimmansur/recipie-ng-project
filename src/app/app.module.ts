@@ -16,6 +16,13 @@ import {ShoppingListService} from "./shopping-list/shopping-list.service";
 import {AppRoutingModule} from "./app-routing.module";
 import { RecipieStartComponent } from './recipies/recipie-start/recipie-start.component';
 import { RecipieEditComponent } from './recipies/recipie-edit/recipie-edit.component';
+import {RecipieService} from "./recipies/recipie.service";
+import {ShortenPipe} from "./shorten.pipe";
+import {DataStorageService} from "./shared/data-storage.service";
+import { SignupComponent } from './auth/signup/signup.component';
+import { SigninComponent } from './auth/signin/signin.component';
+import {AuthService} from "./auth/auth.service";
+import {AuthGuardService} from "./auth/auth-guard.service";
 
 @NgModule({
   declarations: [
@@ -29,7 +36,10 @@ import { RecipieEditComponent } from './recipies/recipie-edit/recipie-edit.compo
     ShoppingEditComponent,
     DropdownDirective,
     RecipieStartComponent,
-    RecipieEditComponent
+    RecipieEditComponent,
+    ShortenPipe,
+    SignupComponent,
+    SigninComponent
   ],
   imports: [
     BrowserModule,
@@ -38,7 +48,7 @@ import { RecipieEditComponent } from './recipies/recipie-edit/recipie-edit.compo
     ReactiveFormsModule,
     HttpModule,
   ],
-  providers: [ShoppingListService],
+  providers: [ShoppingListService, RecipieService, DataStorageService, AuthService, AuthGuardService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
